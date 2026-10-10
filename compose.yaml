@@ -1,0 +1,54 @@
+name: qr
+
+services:
+  smocker:
+    image: ghcr.io/smocker-dev/smocker
+    ports:
+      - "${SMOCKER_HTTP_PORT}:8080"
+      - "${SMOCKER_ADMIN_PORT}:8081"
+    networks:
+      - network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:8081/version"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    restart: unless-stopped
+
+  load-mocks:
+    image: curlimages/curl:8.12.1
+    depends_on:
+      smocker:
+        condition: service_healthy
+    volumes:
+      - ./mocks:/config/mocks:ro
+    networks:
+      - network
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        until curl -fsS http://smocker:8081/version >/dev/null; do
+          :
+        done
+  
+        for file in /config/mocks/*; do
+          [ -f "$$file" ] || continue
+
+          case "$$file" in
+            *.yml|*.yaml)
+              echo "Loading mocks from $$file"
+              curl -fsS -X POST \
+                -H "Content-Type: application/x-yaml" \
+                --data-binary "@$$file" \
+                http://smocker:8081/mocks \
+                || exit 1
+              ;;
+          esac
+        done
+
+        echo "All mocks were uploaded successfully"
+
+networks:
+  network:
+    driver: bridge
