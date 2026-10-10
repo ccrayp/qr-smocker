@@ -1,0 +1,24 @@
+- request:
+    method: POST
+    path: /enter
+    headers:
+      Content-Type: application/json
+    body:
+      matcher: ShouldEqualJSON
+      value: >
+        {
+          "payload": 
+          {
+              "uuid": "da069b06-9ff9-40e9-9a44-d7418f7a1c4b",
+              "totp": "468942"
+          },
+          "signature": "TUcHTR1CxFQqPlW5mxURQ5XdoTf3PKarR5G5FuwGjOFl3VTs9dsRYL/0T867GbLBsgri7dKKckPP05rfJIjEHlpoOvCQVMLXzFuIDZ+37ZZo9YDzmUPW2KlvGmw2mFThg23EGgcLN/xC/8HztaXvb+XHdFKAXLuxUQuOQZKLB2QDFZ9IO6xj0ADctXduhzc6H61NJjfP9bmR2QCT+L48wbcKXBOt4TQdRvHco+7aMIZaAsbQFOiV7zoW79OV6DzaB4cUssrUegVBF0KdL9MQAhjG8IQc1/1wKprQGj2ul36bf8+DA4XhL0Z7rR13DScyQrhkLhI1Od2DChEgN5ci/3VM4s1/6na877ebD1YAHrpT0ozN2zxxlx97WWn37C4Ub0uQ1nRG9AC5JQSjhIL86+UMxIj0S/gD5PBdJQEFm2T7Mz4q4wHMsA9phamE9L4cdgaw57vvODQ/vHyPUUh+nBSnLAbfysAqIcOw9vMj05JIoyRbmpWrxIfrgV8sco/1"
+        }
+
+  response:
+    headers:
+      Content-Type: application/json
+    body: >
+      {
+        "result": "REJECTED"
+      }
